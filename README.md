@@ -10,59 +10,27 @@
 
 ### Overview
 
-This project is a **full-stack CRUD dashboard** running entirely in **Docker**:
+**MySQL CRUD Dashboard** is a small, production‑style demo that runs fully in **Docker**:
 
-- **MySQL container** for persistent storage.
-- **Web app container** (Node.js + Express) serving a modern **HTML/CSS/JS** UI.
-- Users can **Create, Read, Update, Delete** items via a simple browser-based GUI.
+- **MySQL** for data storage  
+- **Node.js + Express** backend  
+- **HTML/CSS/JavaScript** single‑page UI for **Create, Read, Update, Delete** operations.
 
-## Architecture and Project Plan
-
-- **Dockerized services**
-  - **`db`**: MySQL 8 instance, initialized with an `items` table via `db/init.sql`.
-  - **`web`**: Node.js/Express backend with static frontend assets, connected to `db` over the Docker network.
-
-- **Data model**
-  - **Table**: `items`
-  - **Columns**: `id`, `name`, `description`, `created_at`.
-
-- **API design**
-  - **GET** `/api/items` – list all items.
-  - **POST** `/api/items` – create a new item.
-  - **PUT** `/api/items/:id` – update existing item.
-  - **DELETE** `/api/items/:id` – delete by id.
-
-- **Planned enhancements (roadmap)**
-  - **Authentication** (simple login) to protect the dashboard.
-  - **Search and filters** on the items table.
-  - **Pagination** for large datasets.
-  - **Form validation** and richer error messages.
-  - **Dockerized tests** (backend and basic UI smoke tests).
-
-## Tech Stack
+## Stack
 
 - **Backend**: Node.js, Express, `mysql2`
 - **Database**: MySQL 8 (Docker official image)
-- **Frontend**: HTML5, CSS3, vanilla JavaScript
-- **Containerization**: Docker, `docker-compose`
+- **Frontend**: HTML5, CSS3, vanilla JS
+- **Infra**: Docker, `docker-compose`
 
-## Project Structure
+## Project Layout
 
-- **`docker-compose.yml`** – defines `db` and `web` services, networking, and volumes.
+- **`docker-compose.yml`** – defines `db` (MySQL) and `web` (Node/Express) services.
 - **`db/init.sql`** – creates the `appdb` database and `items` table.
-- **`web/Dockerfile`** – build instructions for the web container.
-- **`web/server.js`** – Express server and REST API for CRUD operations.
-- **`web/public/index.html`** – MySQL CRUD dashboard UI.
-- **`web/public/styles.css`** – modern dark-theme styling.
-- **`web/public/script.js`** – frontend logic for calling the REST API (CRUD).
+- **`web/server.js`** – REST API (`/api/items`) used by the UI.
+- **`web/public/`** – `index.html`, `styles.css`, `script.js` for the dashboard.
 
-## Getting Started
-
-### Prerequisites
-
-- **Docker** and **Docker Compose** installed on your machine.
-
-### Run the application
+## Quick Start
 
 From the project root (`/home/naman/Downloads/db-docker`):
 
@@ -70,34 +38,24 @@ From the project root (`/home/naman/Downloads/db-docker`):
 docker-compose up --build
 ```
 
-- **Web UI**: open `http://localhost:8080` in your browser.
-- **MySQL** (optional external access):
-  - **Host**: `localhost`
-  - **Port**: `3306`
-  - **User**: `appuser`
-  - **Password**: `apppassword`
-  - **Database**: `appdb`
+- **Web UI**: `http://localhost:8080`  
+- **MySQL**: `localhost:3306` (`appuser` / `apppassword`, DB `appdb`)
 
-### Stopping the containers
-
-In the same directory:
+To stop:
 
 ```bash
 docker-compose down
 ```
 
-To also remove the MySQL data volume:
+To stop and remove data:
 
 ```bash
 docker-compose down -v
 ```
 
-## Using the GUI
+## Usage
 
-- **Create**: fill in **Name** and **Description**, click **Save**.
-- **Read**: all items appear in the **Items** table.
-- **Update**: click **Edit** on a row, modify values, click **Update**.
-- **Delete**: click **Delete** on a row and confirm.
-
-
-
+- **Create** – enter **Name** and **Description**, click **Save**.  
+- **Read** – items appear instantly in the **Items** table.  
+- **Update** – click **Edit**, change fields, click **Update**.  
+- **Delete** – click **Delete** and confirm.
