@@ -1,0 +1,16 @@
+{
+  "name": "mysql-crud-web",
+  "version": "1.0.0",
+  "description": "Simple HTML/CSS CRUD UI with Node.js backend for MySQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2",
+    "mysql2": "^3.11.3"
+  }
+}
+
+
