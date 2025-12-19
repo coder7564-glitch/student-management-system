@@ -1,16 +1,16 @@
 {
-  "name": "mysql-crud-web",
+  "name": "student-management-web",
   "version": "1.0.0",
-  "description": "Simple HTML/CSS CRUD UI with Node.js backend for MySQL",
+  "description": "Student Management System with Admin and Student dashboards",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.3",
     "express": "^4.21.2",
+    "express-session": "^1.18.1",
     "mysql2": "^3.11.3"
   }
 }
-
-

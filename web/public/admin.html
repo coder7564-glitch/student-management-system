@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Admin Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>👨‍💼 Admin Dashboard</h1>
+        <button class="secondary" id="logout-btn">Logout</button>
+      </div>
+
+      <!-- Statistics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>Total Students</h3>
+          <p class="stat-value" id="stat-students">-</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Courses</h3>
+          <p class="stat-value" id="stat-courses">-</p>
+        </div>
+        <div class="stat-card">
+          <h3>Total Enrollments</h3>
+          <p class="stat-value" id="stat-enrollments">-</p>
+        </div>
+      </div>
+
+      <!-- Students Section -->
+      <section>
+        <h2>👥 Manage Students</h2>
+        <form id="student-form">
+          <input type="hidden" id="student-id" />
+          <div class="form-group">
+            <label for="student-name">Full Name</label>
+            <input type="text" id="student-name" placeholder="Enter student name" required />
+          </div>
+          <div class="form-group">
+            <label for="student-email">Email</label>
+            <input type="email" id="student-email" placeholder="student@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="student-dob">Date of Birth</label>
+            <input type="date" id="student-dob" />
+          </div>
+          <div class="form-group">
+            <label for="student-password">Password</label>
+            <input type="password" id="student-password" placeholder="Leave blank to keep current" />
+          </div>
+          <div class="actions">
+            <button type="submit" id="student-submit-btn">Add Student</button>
+            <button type="button" class="secondary" id="student-cancel-btn" style="display:none;" onclick="cancelStudentEdit()">Cancel</button>
+          </div>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Date of Birth</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="students-body">
+            <tr>
+              <td colspan="5" style="text-align: center; padding: 20px;">Loading students...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Courses Section -->
+      <section>
+        <h2>📚 Manage Courses</h2>
+        <form id="course-form">
+          <input type="hidden" id="course-id" />
+          <div class="form-group">
+            <label for="course-code">Course Code</label>
+            <input type="text" id="course-code" placeholder="e.g., CS101" required />
+          </div>
+          <div class="form-group">
+            <label for="course-title">Course Title</label>
+            <input type="text" id="course-title" placeholder="e.g., Introduction to Computer Science" required />
+          </div>
+          <div class="form-group full-width">
+            <label for="course-desc">Description</label>
+            <textarea id="course-desc" placeholder="Enter course description"></textarea>
+          </div>
+          <div class="actions">
+            <button type="submit" id="course-submit-btn">Add Course</button>
+            <button type="button" class="secondary" id="course-cancel-btn" style="display:none;" onclick="cancelCourseEdit()">Cancel</button>
+          </div>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Code</th>
+              <th>Title</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="courses-body">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 20px;">Loading courses...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Enrollments Section -->
+      <section>
+        <h2>🎯 Manage Enrollments</h2>
+        <form id="enrollment-form">
+          <div class="form-group">
+            <label for="enroll-student">Select Student</label>
+            <select id="enroll-student" required>
+              <option value="">Choose a student...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="enroll-course">Select Course</label>
+            <select id="enroll-course" required>
+              <option value="">Choose a course...</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button type="submit">Enroll Student</button>
+          </div>
+        </form>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Student</th>
+              <th>Course</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="enrollments-body">
+            <tr>
+              <td colspan="4" style="text-align: center; padding: 20px;">Loading enrollments...</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <script src="admin.js"></script>
+  </body>
+</html>

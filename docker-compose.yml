@@ -13,19 +13,28 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "appuser", "-papppassword"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   web:
     build: ./web
     container_name: web-app
     restart: unless-stopped
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       DB_HOST: db
       DB_PORT: "3306"
       DB_USER: appuser
       DB_PASSWORD: apppassword
       DB_NAME: appdb
+      SESSION_SECRET: change_me_dev_secret
+      ADMIN_EMAIL: admin@example.com
+      ADMIN_PASSWORD: admin123
     ports:
       - "8080:8080"
 
