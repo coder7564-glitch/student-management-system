@@ -7,8 +7,10 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies (including dev dependencies for build)
-RUN npm ci --only=production && \
+# Install production dependencies
+# Using npm install here because package-lock.json is excluded by .dockerignore,
+# which makes `npm ci` unusable in this build context.
+RUN npm install --omit=dev && \
     npm cache clean --force
 
 # Production stage

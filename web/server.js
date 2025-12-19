@@ -40,15 +40,17 @@ function dbQuery(sql, params = []) {
   });
 }
 
-// Seed default admin on startup using env vars if not exists
-async function ensureDefaultAdmin() {
+// Seed default admin on startup using env vars if not exists, with simple retry
+async function ensureDefaultAdmin(retries = 10, delayMs = 5000) {
   const adminEmail = process.env.ADMIN_EMAIL || 'admin@example.com';
   const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+
   try {
     // Ensure tables exist (in case init.sql hasn't run yet, this will fail silently and seed later)
-    await dbQuery('CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role ENUM(\'admin\',\'student\'), student_id INT NULL)');
-  } catch (e) {}
-  try {
+    await dbQuery(
+      "CREATE TABLE IF NOT EXISTS users (id INT PRIMARY KEY AUTO_INCREMENT, email VARCHAR(255) UNIQUE, password_hash VARCHAR(255), role ENUM('admin','student'), student_id INT NULL)"
+    );
+
     const rows = await dbQuery('SELECT id FROM users WHERE email = ?', [adminEmail]);
     if (rows.length === 0) {
       const hash = await bcrypt.hash(adminPassword, 10);
@@ -57,9 +59,25 @@ async function ensureDefaultAdmin() {
         [adminEmail, hash, 'admin']
       );
       console.log(`Seeded default admin: ${adminEmail}`);
+    } else {
+      console.log(`Default admin already present: ${adminEmail}`);
     }
   } catch (e) {
     console.error('Error ensuring default admin:', e.message);
+    const transientCodes = [
+      'ECONNREFUSED',
+      'PROTOCOL_CONNECTION_LOST',
+      'ER_ACCESS_DENIED_ERROR',
+      'ENOTFOUND'
+    ];
+    if (retries > 0 && transientCodes.includes(e.code)) {
+      console.log(
+        `Will retry ensuring default admin in ${delayMs / 1000}s... (${retries} retries left)`
+      );
+      setTimeout(() => {
+        ensureDefaultAdmin(retries - 1, delayMs);
+      }, delayMs);
+    }
   }
 }
 ensureDefaultAdmin();
