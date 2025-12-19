@@ -289,7 +289,7 @@ app.get('/api/my/enrollments', requireAuth, async (req, res) => {
 
 // Routes for dashboards
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'login.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.listen(port, () => {

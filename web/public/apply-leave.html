@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Leave - Student Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #0f1729;
+            --bg-card: #151b2e;
+            --accent-primary: #10b981;
+            --accent-secondary: #34d399;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: rgba(148, 163, 184, 0.1);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left: 4px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 4px solid var(--danger);
+        }
+
+        .toast-icon {
+            font-size: 24px;
+        }
+
+        .toast-content {
+            flex: 1;
+        }
+
+        .toast-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .toast-message {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0 0 0 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .toast-close:hover {
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        /* Navigation Button Group */
+        .nav-button-group {
+            display: inline-flex;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            margin-right: 16px;
+        }
+
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-button:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .nav-button.active {
+            background: var(--accent-primary);
+            color: white;
+            box-shadow: 0 4px 14px -2px rgba(16, 185, 129, 0.3);
+        }
+
+        .nav-button.active:hover {
+            background: var(--accent-secondary);
+        }
+
+        .nav-icon {
+            font-size: 1.1em;
+            display: inline-flex;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(21, 27, 46, 0.9); border-bottom: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 40;">
+        <a href="student-dashboard.html" class="nav-brand" style="display: flex; align-items: center; gap: 12px; font-size: 1.3rem; font-weight: 700;">
+            <span>🎓</span>
+            <span>Student Portal</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <div class="nav-button-group">
+                <a href="student-dashboard.html" class="nav-button">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="apply-leave.html" class="nav-button active">
+                    <span class="nav-icon">📋</span>
+                    <span>Apply Leave</span>
+                </a>
+            </div>
+            <button class="logout-btn" onclick="logout()" style="padding: 8px 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #fca5a5; border-radius: 8px; cursor: pointer; font-size: 0.9rem; transition: all 0.3s ease; display: flex; align-items: center; gap: 6px;" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'; this.style.borderColor='rgba(239, 68, 68, 0.5)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'; this.style.borderColor='rgba(239, 68, 68, 0.3)'">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">Apply for Leave</h1>
+                <p class="card-subtitle">Submit your leave application with details</p>
+            </div>
+            
+            <form id="leaveForm">
+                <div class="form-group">
+                    <label for="leaveType" class="form-label">Leave Type <span class="required">*</span></label>
+                    <select id="leaveType" class="form-select" required>
+                        <option value="">Select leave type</option>
+                        <option value="sick">Sick Leave</option>
+                        <option value="personal">Personal Leave</option>
+                        <option value="vacation">Vacation</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="startDate" class="form-label">Start Date <span class="required">*</span></label>
+                    <input type="date" id="startDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="endDate" class="form-label">End Date <span class="required">*</span></label>
+                    <input type="date" id="endDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason" class="form-label">Reason <span class="required">*</span></label>
+                    <textarea id="reason" class="form-textarea" placeholder="Please provide a reason for your leave..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="contactNumber" class="form-label">Contact Number <span class="required">*</span></label>
+                    <input type="tel" id="contactNumber" class="form-input" placeholder="Your contact number" required>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                        <span>📝</span>
+                        <span>Submit Application</span>
+                    </button>
+                    <button type="button" id="clearBtn" class="btn btn-secondary">
+                        <span>🗑️</span>
+                        <span>Clear Form</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Leave History</h2>
+                <p class="card-subtitle">Your previous leave applications</p>
+            </div>
+            <div id="leaveHistory">
+                <!-- Leave history will be loaded here -->
+                <div class="empty-state">
+                    <p>No leave applications found.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <div id="toastIcon" class="toast-icon"></div>
+        <div class="toast-content">
+            <div id="toastTitle" class="toast-title"></div>
+            <div id="toastMessage" class="toast-message"></div>
+        </div>
+        <button id="toastClose" class="toast-close">&times;</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const leaveForm = document.getElementById('leaveForm');
+        const clearBtn = document.getElementById('clearBtn');
+        const toast = document.getElementById('toast');
+        const toastTitle = document.getElementById('toastTitle');
+        const toastMessage = document.getElementById('toastMessage');
+        const toastIcon = document.getElementById('toastIcon');
+        const toastClose = document.getElementById('toastClose');
+
+        // Check authentication
+        function checkAuth() {
+            const userRole = sessionStorage.getItem('userRole');
+            const studentId = sessionStorage.getItem('studentId');
+            const studentName = sessionStorage.getItem('studentName');
+
+            if (userRole !== 'student' || !studentId) {
+                window.location.href = 'student-login.html';
+                return;
+            }
+        }
+
+        // Show toast notification
+        function showToast(title, message, type = 'success') {
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Set icon and style based on type
+            if (type === 'success') {
+                toastIcon.textContent = '✅';
+                toast.className = 'toast show success';
+            } else {
+                toastIcon.textContent = '❌';
+                toast.className = 'toast show error';
+            }
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+
+        // Close toast
+        toastClose.addEventListener('click', () => {
+            toast.classList.remove('show');
+        });
+
+        // Clear form
+        clearBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to clear the form?')) {
+                leaveForm.reset();
+            }
+        });
+
+        // Handle form submission
+        leaveForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const leaveType = document.getElementById('leaveType').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const reason = document.getElementById('reason').value;
+            const contactNumber = document.getElementById('contactNumber').value;
+            const studentId = sessionStorage.getItem('studentId');
+            const studentName = sessionStorage.getItem('studentName');
+
+            // Validate dates
+            if (new Date(startDate) > new Date(endDate)) {
+                showToast('Error', 'End date cannot be before start date', 'error');
+                return;
+            }
+
+            // Create leave application object
+            const leaveApplication = {
+                id: Date.now().toString(),
+                studentId,
+                studentName,
+                leaveType,
+                startDate,
+                endDate,
+                reason,
+                contactNumber,
+                status: 'pending',
+                appliedDate: new Date().toISOString(),
+                approvedBy: null,
+                approvedDate: null
+            };
+
+            // Save to localStorage
+            const leaveApplications = JSON.parse(localStorage.getItem('leaveApplications') || '[]');
+            leaveApplications.push(leaveApplication);
+            localStorage.setItem('leaveApplications', JSON.stringify(leaveApplications));
+
+            // Show success message
+            showToast('Success', 'Your leave application has been submitted successfully!');
+            
+            // Reset form
+            leaveForm.reset();
+            
+            // Refresh leave history
+            loadLeaveHistory();
+        });
+
+        // Load leave history
+        function loadLeaveHistory() {
+            const studentId = sessionStorage.getItem('studentId');
+            const leaveApplications = JSON.parse(localStorage.getItem('leaveApplications') || '[]');
+            const studentLeaves = leaveApplications.filter(leave => leave.studentId === studentId);
+            
+            const leaveHistory = document.getElementById('leaveHistory');
+            
+            if (studentLeaves.length === 0) {
+                leaveHistory.innerHTML = `
+                    <div class="empty-state">
+                        <p>No leave applications found.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by applied date (newest first)
+            studentLeaves.sort((a, b) => new Date(b.appliedDate) - new Date(a.appliedDate));
+
+            // Generate leave history HTML
+            const leaveItems = studentLeaves.map(leave => {
+                const statusClass = `status-${leave.status}`;
+                const statusText = leave.status.charAt(0).toUpperCase() + leave.status.slice(1);
+                
+                return `
+                    <div class="leave-item">
+                        <div class="leave-header">
+                            <span class="leave-type">${leave.leaveType}</span>
+                            <span class="leave-status ${statusClass}">${statusText}</span>
+                        </div>
+                        <div class="leave-dates">
+                            ${formatDate(leave.startDate)} to ${formatDate(leave.endDate)}
+                        </div>
+                        <div class="leave-reason">
+                            ${leave.reason}
+                        </div>
+                        <div class="leave-footer">
+                            <span class="leave-applied">Applied on ${formatDateTime(leave.appliedDate)}</span>
+                            ${leave.approvedBy ? `<span class="leave-approved">Approved by ${leave.approvedBy} on ${formatDateTime(leave.approvedDate)}</span>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            leaveHistory.innerHTML = `
+                <div class="leave-list">
+                    ${leaveItems}
+                </div>
+                <style>
+                    .leave-list {
+                        display: flex;
+                        flex-direction: column;
+                        gap: 16px;
+                    }
+                    
+                    .leave-item {
+                        background: var(--bg-secondary);
+                        border: 1px solid var(--border);
+                        border-radius: 8px;
+                        padding: 16px;
+                        transition: all 0.2s;
+                    }
+                    
+                    .leave-item:hover {
+                        border-color: var(--accent-primary);
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    }
+                    
+                    .leave-header {
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 8px;
+                    }
+                    
+                    .leave-type {
+                        font-weight: 600;
+                        text-transform: capitalize;
+                    }
+                    
+                    .leave-status {
+                        font-size: 0.8rem;
+                        padding: 4px 8px;
+                        border-radius: 12px;
+                        font-weight: 500;
+                    }
+                    
+                    .status-pending {
+                        background: rgba(245, 158, 11, 0.1);
+                        color: #f59e0b;
+                    }
+                    
+                    .status-approved {
+                        background: rgba(16, 185, 129, 0.1);
+                        color: #10b981;
+                    }
+                    
+                    .status-rejected {
+                        background: rgba(239, 68, 68, 0.1);
+                        color: #ef4444;
+                    }
+                    
+                    .leave-dates {
+                        font-size: 0.9rem;
+                        color: var(--text-secondary);
+                        margin-bottom: 8px;
+                    }
+                    
+                    .leave-reason {
+                        margin-bottom: 12px;
+                        line-height: 1.5;
+                    }
+                    
+                    .leave-footer {
+                        display: flex;
+                        justify-content: space-between;
+                        font-size: 0.8rem;
+                        color: var(--text-muted);
+                    }
+                    
+                    .empty-state {
+                        text-align: center;
+                        padding: 40px 20px;
+                        color: var(--text-muted);
+                    }
+                </style>
+            `;
+        }
+
+        // Format date as DD/MM/YYYY
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB'); // UK format (DD/MM/YYYY)
+        }
+
+        // Format date and time
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            return date.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+            loadLeaveHistory();
+            
+            // Set minimum date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+            
+            // Update end date min when start date changes
+            document.getElementById('startDate').addEventListener('change', (e) => {
+                document.getElementById('endDate').min = e.target.value;
+            });
+        });
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.clear();
+                window.location.href = 'student-login.html';
+            }
+        }
+    </script>
+</body>
+</html>

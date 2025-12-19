@@ -1,0 +1,39 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+docker-compose*.yml
+*.dockerfile
+Dockerfile*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Documentation
+README.md
+*.md
+docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Node modules (handled separately in web/.dockerignore)
+node_modules/

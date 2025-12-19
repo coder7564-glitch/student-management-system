@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Attendance System - Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #0a0e27;
+      --bg-secondary: #0f1729;
+      --bg-card: #151b2e;
+      --accent-primary: #6366f1;
+      --accent-secondary: #818cf8;
+      --accent-glow: rgba(99, 102, 241, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --border: rgba(148, 163, 184, 0.1);
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 40px var(--accent-glow);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 80%, rgba(129, 140, 248, 0.08) 0%, transparent 50%),
+                  radial-gradient(circle at 40% 20%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
+      animation: drift 20s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(30px, -30px) rotate(5deg); }
+      66% { transform: translate(-20px, 20px) rotate(-5deg); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Left side - Branding */
+    .branding {
+      padding: 40px;
+      animation: slideInLeft 0.8s ease-out;
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .logo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      box-shadow: var(--shadow-glow);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .logo-text h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      background: linear-gradient(135deg, var(--text-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .logo-text p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+
+    .features {
+      margin-top: 48px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(99, 102, 241, 0.3);
+      transform: translateX(8px);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.1));
+      border-radius: 10px;
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .feature-content h3 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .feature-content p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Right side - Login cards */
+    .login-section {
+      animation: slideInRight 0.8s ease-out;
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+
+    .section-title p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+    }
+
+    .login-cards {
+      display: grid;
+      gap: 24px;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border-radius: 20px;
+      padding: 32px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-md);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .login-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .login-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .card-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(129, 140, 248, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .card-title h3 {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .card-title p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .card-description {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .card-button {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .card-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    .card-button:active {
+      transform: translateY(0);
+    }
+
+    .arrow {
+      transition: transform 0.3s ease;
+    }
+
+    .login-card:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      z-index: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .container {
+        grid-template-columns: 1fr;
+        gap: 60px;
+      }
+
+      .branding {
+        text-align: center;
+      }
+
+      .feature-item {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .feature-item:hover {
+        transform: translateY(-4px);
+      }
+    }
+
+    @media (max-width: 640px) {
+      .logo {
+        flex-direction: column;
+      }
+
+      .logo-text h1 {
+        font-size: 1.6rem;
+      }
+
+      .section-title h2 {
+        font-size: 1.5rem;
+      }
+
+      .login-card {
+        padding: 24px;
+      }
+
+      .card-header {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left Side - Branding -->
+    <div class="branding">
+      <div class="logo">
+        <div class="logo-icon">📚</div>
+        <div class="logo-text">
+          <h1>Attendance System</h1>
+          <p>Smart & Efficient Management</p>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="feature-item">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-content">
+            <h3>Real-time Tracking</h3>
+            <p>Monitor student attendance with live updates and instant notifications</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">📊</div>
+          <div class="feature-content">
+            <h3>Advanced Analytics</h3>
+            <p>Comprehensive reports and insights for better decision making</p>
+          </div>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-content">
+            <h3>Secure & Reliable</h3>
+            <p>Enterprise-grade security to protect your data and privacy</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Login Options -->
+    <div class="login-section">
+      <div class="section-title">
+        <h2>Welcome Back</h2>
+        <p>Select your role to continue</p>
+      </div>
+
+      <div class="login-cards">
+        <!-- Admin Login Card -->
+        <div class="login-card" onclick="window.location.href='admin-login.html'">
+          <div class="card-header">
+            <div class="card-icon">👨‍💼</div>
+            <div class="card-title">
+              <h3>Admin Portal</h3>
+              <p>Management Access</p>
+            </div>
+          </div>
+          <div class="card-description">
+            Access the administrative dashboard to manage students, view attendance records, generate reports, and configure system settings.
+          </div>
+          <button class="card-button">
+            <span>Login as Admin</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+
+        <!-- Student Login Card -->
+        <div class="login-card" onclick="window.location.href='student-login.html'">
+          <div class="card-header">
+            <div class="card-icon">🎓</div>
+            <div class="card-title">
+              <h3>Student Portal</h3>
+              <p>Student Access</p>
+            </div>
+          </div>
+          <div class="card-description">
+            View your attendance records, check your academic performance, access course materials, and track your progress throughout the semester.
+          </div>
+          <button class="card-button">
+            <span>Login as Student</span>
+            <span class="arrow">→</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>© 2025 Student Attendance System. All rights reserved.</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mid-term Marks Management - Student Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #0f1729;
+            --bg-card: #151b2e;
+            --accent-primary: #10b981;
+            --accent-secondary: #34d399;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: rgba(148, 163, 184, 0.1);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+            --accent-glow: rgba(16, 185, 129, 0.4);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1729 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        .navbar {
+            background: rgba(21, 27, 46, 0.9);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow-md);
+            backdrop-filter: blur(14px);
+            position: sticky;
+            top: 0;
+            z-index: 40;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--accent-primary);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .card {
+            background: rgba(21, 27, 46, 0.95);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 24px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .required {
+            color: var(--danger);
+            margin-left: 4px;
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            background: var(--bg-card);
+            border-left: 4px solid var(--success);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+
+        .toast-icon {
+            font-size: 20px;
+        }
+
+        .toast.success .toast-icon {
+            color: var(--success);
+        }
+
+        .toast.error .toast-icon {
+            color: var(--danger);
+        }
+
+        .toast-content h4 {
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .toast-content p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            margin-left: 12px;
+            padding: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <a href="student-management.html" class="nav-brand">
+            <span>🎓</span>
+            <span>Student Portal</span>
+        </a>
+        <div class="nav-links">
+            <a href="student-management.html" class="nav-link">Student Management</a>
+            <a href="midterm-marks.html" class="nav-link active">Mid-term Marks</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Mid-term Marks Management -->
+        <div class="card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title">Mid-term Marks Management</h2>
+                    <p class="card-subtitle">Manage mid-term marks for students</p>
+                </div>
+            </div>
+
+            <div class="card-body">
+                <div class="form-group">
+                    <label class="form-label">
+                        <span>Select Student</span>
+                        <span class="required">*</span>
+                    </label>
+                    <select id="student-select" class="form-input" style="margin-bottom: 16px;">
+                        <option value="">-- Select a student --</option>
+                    </select>
+                </div>
+
+                <div id="marks-form" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span>Mid 1 Marks (%)</span>
+                            <span class="required">*</span>
+                        </label>
+                        <input type="number" id="edit-mid1" class="form-input" placeholder="0-100" min="0" max="100" step="0.1" required />
+                        <div id="edit-mid1-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span>Mid 2 Marks (%)</span>
+                            <span class="required">*</span>
+                        </label>
+                        <input type="number" id="edit-mid2" class="form-input" placeholder="0-100" min="0" max="100" step="0.1" required />
+                        <div id="edit-mid2-error" class="error-message"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span>Average Marks (%)</span>
+                        </label>
+                        <input type="number" id="edit-average-marks" class="form-input" readonly disabled />
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="save-marks-btn" class="btn btn-primary">
+                            <span>💾 Save Marks</span>
+                        </button>
+                        <button type="button" id="clear-marks-btn" class="btn btn-secondary">
+                            Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span class="toast-icon">✓</span>
+        <div class="toast-content">
+            <h4 id="toast-title">Success</h4>
+            <p id="toast-message">Operation completed successfully</p>
+        </div>
+        <button class="toast-close">&times;</button>
+    </div>
+
+    <script>
+        // DOM Elements
+        const studentSelect = document.getElementById('student-select');
+        const marksForm = document.getElementById('marks-form');
+        const editMid1Input = document.getElementById('edit-mid1');
+        const editMid2Input = document.getElementById('edit-mid2');
+        const editAverageMarksInput = document.getElementById('edit-average-marks');
+        const saveMarksBtn = document.getElementById('save-marks-btn');
+        const clearMarksBtn = document.getElementById('clear-marks-btn');
+        const toast = document.getElementById('toast');
+        const toastTitle = document.getElementById('toast-title');
+        const toastMessage = document.getElementById('toast-message');
+        const toastClose = document.querySelector('.toast-close');
+
+        let selectedStudentId = null;
+        let students = [];
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStudents();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            studentSelect.addEventListener('change', handleStudentSelect);
+            editMid1Input.addEventListener('input', updateAverageMarks);
+            editMid2Input.addEventListener('input', updateAverageMarks);
+            saveMarksBtn.addEventListener('click', saveMarks);
+            clearMarksBtn.addEventListener('click', clearMarksForm);
+            toastClose.addEventListener('click', hideToast);
+        }
+
+        function loadStudents() {
+            const savedStudents = localStorage.getItem('studentsData');
+            students = savedStudents ? JSON.parse(savedStudents) : [];
+            populateStudentSelect();
+        }
+
+        function populateStudentSelect() {
+            studentSelect.innerHTML = '<option value="">-- Select a student --</option>';
+            students.forEach(student => {
+                const option = document.createElement('option');
+                option.value = student.id;
+                option.textContent = `${student.name} (${student.username}) - ${student.course}`;
+                studentSelect.appendChild(option);
+            });
+        }
+
+        function handleStudentSelect(e) {
+            const studentId = e.target.value;
+            selectedStudentId = studentId;
+
+            if (!studentId) {
+                marksForm.style.display = 'none';
+                return;
+            }
+
+            const student = students.find(s => s.id == studentId);
+            if (student) {
+                editMid1Input.value = student.mid1 || '';
+                editMid2Input.value = student.mid2 || '';
+                updateAverageMarks();
+                marksForm.style.display = 'block';
+            } else {
+                marksForm.style.display = 'none';
+            }
+        }
+
+        function updateAverageMarks() {
+            const mid1 = parseFloat(editMid1Input.value) || 0;
+            const mid2 = parseFloat(editMid2Input.value) || 0;
+            const average = (mid1 + mid2) / 2;
+
+            if (!isNaN(average)) {
+                editAverageMarksInput.value = average.toFixed(2);
+            } else {
+                editAverageMarksInput.value = '';
+            }
+        }
+
+        function saveMarks() {
+            if (!selectedStudentId) return;
+
+            const mid1 = parseFloat(editMid1Input.value);
+            const mid2 = parseFloat(editMid2Input.value);
+
+            // Validate marks
+            if (isNaN(mid1) || mid1 < 0 || mid1 > 100) {
+                showToast('Invalid Marks', 'Please enter valid Mid 1 marks (0-100)', 'error');
+                editMid1Input.focus();
+                return;
+            }
+
+            if (isNaN(mid2) || mid2 < 0 || mid2 > 100) {
+                showToast('Invalid Marks', 'Please enter valid Mid 2 marks (0-100)', 'error');
+                editMid2Input.focus();
+                return;
+            }
+
+            const average = (mid1 + mid2) / 2;
+            const gpa = calculateGpaFromMarks(average);
+            const grade = calculateGradeFromMarks(average);
+
+            // Update student data
+            const studentIndex = students.findIndex(s => s.id == selectedStudentId);
+            if (studentIndex !== -1) {
+                students[studentIndex] = {
+                    ...students[studentIndex],
+                    mid1,
+                    mid2,
+                    marks: average,
+                    gpa,
+                    grade
+                };
+
+                // Save to localStorage
+                localStorage.setItem('studentsData', JSON.stringify(students));
+                showToast('Success', 'Marks updated successfully!', 'success');
+            }
+        }
+
+        function clearMarksForm() {
+            studentSelect.value = '';
+            editMid1Input.value = '';
+            editMid2Input.value = '';
+            editAverageMarksInput.value = '';
+            marksForm.style.display = 'none';
+            selectedStudentId = null;
+        }
+
+        function calculateGpaFromMarks(marks) {
+            if (marks >= 90) return 4.0;
+            if (marks >= 80) return 3.5;
+            if (marks >= 70) return 3.0;
+            if (marks >= 60) return 2.5;
+            if (marks >= 50) return 2.0;
+            if (marks >= 40) return 1.5;
+            return 1.0;
+        }
+
+        function calculateGradeFromMarks(marks) {
+            if (marks >= 90) return 'A';
+            if (marks >= 80) return 'B';
+            if (marks >= 70) return 'C';
+            if (marks >= 60) return 'D';
+            if (marks >= 50) return 'E';
+            return 'F';
+        }
+
+        function showToast(title, message, type = 'success') {
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+            
+            // Update toast style based on type
+            toast.className = `toast ${type}`;
+            
+            // Show toast
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100);
+            
+            // Auto-hide after 5 seconds
+            setTimeout(hideToast, 5000);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+        }
+    </script>
+</body>
+</html>
